@@ -1,0 +1,61 @@
+-- ]]
+-- SonicElijahMania real life in all players
+-- made by Zyphor
+-- ]]
+local Players = game:GetService("Players")
+
+local function applyEffect(player)
+	local function onCharacter(character)
+		local root = character:WaitForChild("HumanoidRootPart",5)
+		if not root then return end
+
+		for _,v in pairs(character:GetDescendants()) do
+			if v:IsA("BasePart") or v:IsA("Decal") then
+				v.Transparency = 1
+			end
+		end
+
+		local smoke = Instance.new("Smoke")
+		smoke.Parent = root
+		smoke.Color = Color3.new(0.9,0.9,0.9)
+		smoke.Opacity = 0.3
+		smoke.Size = 0.5
+		smoke.RiseVelocity = 3
+		smoke.Enabled = true
+
+		local billboard = Instance.new("BillboardGui")
+		billboard.Parent = root
+		billboard.Size = UDim2.new(8,0,15,0)
+		billboard.StudsOffset = Vector3.new(0,3,0)
+		billboard.AlwaysOnTop = true
+
+		local image = Instance.new("ImageLabel")
+		image.Parent = billboard
+		image.Size = UDim2.new(1,0,1,0)
+		image.BackgroundTransparency = 1
+		image.ScaleType = Enum.ScaleType.Stretch
+
+		local ids = {138571060500318}
+
+		task.spawn(function()
+			while image.Parent do
+				for _,id in ipairs(ids) do
+					image.Image = "rbxassetid://"..id
+					task.wait(0.04)
+				end
+			end
+		end)
+	end
+
+	if player.Character then
+		onCharacter(player.Character)
+	end
+
+	player.CharacterAdded:Connect(onCharacter)
+end
+
+for _,player in pairs(Players:GetPlayers()) do
+	applyEffect(player)
+end
+
+Players.PlayerAdded:Connect(applyEffect)
